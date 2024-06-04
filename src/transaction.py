@@ -1,14 +1,11 @@
 from datetime import datetime
-
 from src.funcs import get_masking_card
-
 
 class Transactions:
 
     def __init__(self, transaction: dict):
         """
         Инициализация транзакции
-        :param transaction:
         """
         self.transaction = transaction
         self.date = self.transaction['date']
@@ -20,7 +17,6 @@ class Transactions:
     def get_format_date(self):
         """
         Форматирует дату в нужный вид
-        :return: formatted date
         """
         date = datetime.fromisoformat(self.date)
         formatted_date = date.strftime("%d.%m.%Y")
@@ -29,14 +25,12 @@ class Transactions:
     def get_amount(self):
         """
         Возвращает сумму и валюту в нужном фомате
-        :return:
         """
         return self.operationAmount['amount'] + ' ' + self.operationAmount['currency']['name']
 
     def __repr__(self):
         """
         Вывод при вызове класса
-        :return:
         """
         date = self.get_format_date()
         amount = self.get_amount()

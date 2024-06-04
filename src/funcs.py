@@ -1,24 +1,36 @@
-import os
 import json
-from datetime import datetime
+
+def load_data(file):
+    with open(file, encoding="utf8") as json_file:
+        data = json.load(json_file)
+    return data
 
 
-def get_list_from_json():
-    path_operations = os.path.join("..", "operations", "operations.json")
-    with open(path_operations, encoding="utf-8") as file:
-        operations = json.load(file)
-    return operations
+def get_transaction(data: list):
+    """
+    Получает на вход список операций и
+    возвращает 5 последних успешных
+    """
+    executed_list = []
+    for trans in reversed(data):
+        if len(executed_list) < 5:
+            if trans['state'] == "EXECUTED" and 'from' in trans:
+                executed_list.append(trans)
+    return executed_list
 
-get_list_from_json()
 
-def show_five_last_transactions(operations):
-    if len(operations) < 5:
-        last_five_operations = operations
+def get_masking_card(card):
+    """
+    Маскирует счет или карту
+    """
+    if 'Счет' in card:
+        return card[:4] + ' **' + card[-4:]
     else:
-        last_five_operations = operations[-5:]
+        name = card[:-17]
+        nums = card[-16:]
+        nums = nums.replace(card[-10:-4], '******')
+        format_nums = ''
+        for i in range(0, len(nums), 4):
+            format_nums += nums[i:i + 4] + ' '
+        return name + ' ' + format_nums
 
-    for transaction in last_five_operations:
-        print(f"{transaction['date']} {transaction['description']}")
-        print(f"{transaction['from']} {transaction['to']}")
-        print(f"{transaction['from']} {transaction['to']}")
-        print(f"{transaction['amount']}")
